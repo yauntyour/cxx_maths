@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <functional>
 
-namespace np_qcnn
+namespace np
 {
 #define active_func_make(T, func_name) np::Numcpp<T> func_name(np::Numcpp<T> &A, np::Numcpp<T> &B)
 #define active_lambda_make(T) [](np::Numcpp<T> & A, np::Numcpp<T> & B) -> np::Numcpp<T>

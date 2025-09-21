@@ -1,7 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <opencv2/opencv.hpp>
-#include "kalman_filter.hpp"
+#include "kf.hpp"
 
 using namespace std;
 using namespace cv;
@@ -96,7 +96,7 @@ int main(int argc, char const *argv[])
     printf("Width:%d,Height:%d,Total_FPS:%d,FPS:%f\n", width, height, frameCount, fps);
 
     //[x, y, vx, vy, ax, ay]
-    kalman::KalmanFilter<double> kf(6, 2);
+    kalman::LinearKalmanFilter<double> kf(6, 2);
 
     np::Numcpp<double> F(6, 6, 0.0);
     double dt = 1.0 / fps;
@@ -139,7 +139,7 @@ int main(int argc, char const *argv[])
     bool first_detection = true;
 
     int lost_count = 0;
-    const int max_lost = 30;
+    const int max_lost = 30; // 1s
 
     while (true)
     {
@@ -158,7 +158,7 @@ int main(int argc, char const *argv[])
                 np::Numcpp<double> newState(6, 1, 0.0);
                 newState[0][0] = detected_center.x;
                 newState[1][0] = detected_center.y;
-                kf.setState(newState);
+                kf.setInitialState(newState);
                 first_detection = false;
             }
             else

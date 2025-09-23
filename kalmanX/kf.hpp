@@ -1,5 +1,5 @@
-#ifndef __kf_FILTER__H__
-#define __kf_FILTER__H__
+#ifndef __KF__H__
+#define __KF__H__
 
 #include "Numcpp/Numcpp.hpp"
 #include <functional>
@@ -90,6 +90,9 @@ namespace kf
             }
             R = observationNoise;
         }
+        virtual void GaussiandistributionNoiseMatrix(np::Numcpp<T> &mat)
+        {
+        }
 
         // 预测步骤（纯虚函数）
         virtual void predict() = 0;
@@ -149,6 +152,7 @@ namespace kf
         size_t p;
 
     public:
+        kfl() = default;
         // 构造函数 - 基本版本
         kfl(size_t state_dim, size_t measurement_dim)
             : kf<T>(state_dim, measurement_dim),
@@ -319,12 +323,14 @@ namespace kf
 
     public:
         // 构造函数
+        ekf() = default;
+
         ekf(size_t state_dim, size_t measurement_dim,
             std::function<np::Numcpp<T>(const np::Numcpp<T> &, const np::Numcpp<T> &)> state_transition_func,
             std::function<np::Numcpp<T>(const np::Numcpp<T> &)> observation_func,
             std::function<np::Numcpp<T>(const np::Numcpp<T> &, const np::Numcpp<T> &)> state_transition_jacobian_func,
             std::function<np::Numcpp<T>(const np::Numcpp<T> &)> observation_jacobian_func,
-            size_t control_dim = 0)
+            size_t control_dim = 1)
             : kf<T>(state_dim, measurement_dim),
               f(state_transition_func),
               h(observation_func),
@@ -465,6 +471,7 @@ namespace kf
         }
 
     public:
+        ukf() = default;
         // 构造函数
         ukf(size_t state_dim, size_t measurement_dim,
             std::function<np::Numcpp<T>(const np::Numcpp<T> &, const np::Numcpp<T> &)> state_transition_func,
@@ -598,4 +605,4 @@ namespace kf
 
 } // namespace kf
 
-#endif // __kf_FILTER__H__
+#endif // __KF__H__

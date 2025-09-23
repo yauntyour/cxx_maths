@@ -79,9 +79,12 @@ Point2f hsv_circle_find(Mat &src)
     return center;
 }
 
+#define URL "rtsp://192.168.121.155:8080/h264.sdp"
+#define KUN "D:\\dev\\cxx_kalman\\ds\\kun.mp4"
+
 int main(int argc, char const *argv[])
 {
-    VideoCapture capture("D:\\dev\\cxx_kalman\\ds\\kun.mp4");
+    VideoCapture capture(KUN);
     if (!capture.isOpened())
     {
         std::cerr << "Error: Could not open video." << std::endl;
@@ -96,7 +99,7 @@ int main(int argc, char const *argv[])
     printf("Width:%d,Height:%d,Total_FPS:%d,FPS:%f\n", width, height, frameCount, fps);
 
     //[x, y, vx, vy, ax, ay]
-    kalman::LinearKalmanFilter<double> kf(6, 2);
+    kf::kfl<double> kf(6, 2);
 
     np::Numcpp<double> F(6, 6, 0.0);
     double dt = 1.0 / fps;

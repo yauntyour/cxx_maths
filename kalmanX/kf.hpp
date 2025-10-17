@@ -1,5 +1,5 @@
-#ifndef __KF__H__
-#define __KF__H__
+#ifndef __kf_FILTER__H__
+#define __kf_FILTER__H__
 
 #include "Numcpp/Numcpp.hpp"
 #include <functional>
@@ -431,8 +431,6 @@ namespace kf
             // 第一个Sigma点是均值
             sigma_points.push_back(mean);
 
-            // 计算矩阵平方根
-            np::Numcpp<T> S = cov;
             // 这里需要实现矩阵平方根计算，例如使用Cholesky分解
             // 简化实现：假设cov是对角矩阵
             np::Numcpp<T> sqrt_cov(n, n, (T)0);
@@ -444,12 +442,11 @@ namespace kf
             // 生成Sigma点
             for (size_t i = 0; i < n; i++)
             {
-                np::Numcpp<T> point1 = mean + sqrt_cov[i];
-                np::Numcpp<T> point2 = mean - sqrt_cov[i];
+                np::Numcpp<T> point1 = mean + sqrt_cov.scol(i);
+                np::Numcpp<T> point2 = mean - sqrt_cov.scol(i);
                 sigma_points.push_back(point1);
                 sigma_points.push_back(point2);
             }
-
             return sigma_points;
         }
 
@@ -491,17 +488,12 @@ namespace kf
         // 预测步骤（无控制输入）
         void predict() override
         {
-            predict(np::Numcpp<T>(p, 1, (T)0));
+            predict(np::Numcpp<T>());
         }
 
         // 预测步骤（有控制输入）
         void predict(const np::Numcpp<T> &u) override
         {
-            if (u.row != p || u.col != 1)
-            {
-                throw std::invalid_argument("Control input dimension mismatch");
-            }
-
             // 计算Sigma点
             std::vector<np::Numcpp<T>> sigma_points = calculateSigmaPoints(x, P);
 
@@ -605,4 +597,4 @@ namespace kf
 
 } // namespace kf
 
-#endif // __KF__H__
+#endif // __kf_FILTER__H__

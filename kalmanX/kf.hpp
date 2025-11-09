@@ -1,6 +1,5 @@
-#ifndef __kf_FILTER__H__
-#define __kf_FILTER__H__
-
+#ifndef __KF__H__
+#define __KF__H__
 #include "Numcpp/Numcpp.hpp"
 #include <functional>
 #include <cmath>
@@ -596,5 +595,4 @@ namespace kf
     using kfFilter = kfl<T>;
 
 } // namespace kf
-
-#endif // __kf_FILTER__H__
+#endif //!__KF__H__
